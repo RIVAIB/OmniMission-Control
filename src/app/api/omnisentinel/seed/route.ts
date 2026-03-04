@@ -6,8 +6,8 @@ import { requireRole } from '@/lib/auth'
 import { OMNISENTINEL_AGENTS } from '@/data/omnisentinel-agents'
 
 export async function POST(req: NextRequest) {
-  const authError = await requireRole(req, 'admin')
-  if (authError) return authError
+  const auth = requireRole(req, 'admin')
+  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
   const db = getDatabase()
   const now = Math.floor(Date.now() / 1000)
