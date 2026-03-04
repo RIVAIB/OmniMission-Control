@@ -1,0 +1,63 @@
+{
+  "env": {
+    "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
+  },
+  "gateway": {
+    "port": 18789,
+    "bind": "lan",
+    "auth": {
+      "mode": "token",
+      "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    },
+    "controlUi": {
+      "enabled": true,
+      "allowedOrigins": ["${MISSION_CONTROL_ORIGIN}"]
+    },
+    "openaiHttp": {
+      "enabled": true
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "tools": {
+        "allow": ["*"]
+      }
+    },
+    "list": [
+      {
+        "id": "JESSY",
+        "default": true,
+        "workspace": "/data/.openclaw/workspaces/JESSY"
+      },
+      {
+        "id": "CLAWDIO",
+        "workspace": "/data/.openclaw/workspaces/CLAWDIO"
+      },
+      {
+        "id": "NEXUS",
+        "workspace": "/data/.openclaw/workspaces/NEXUS"
+      },
+      {
+        "id": "APEX",
+        "workspace": "/data/.openclaw/workspaces/APEX"
+      },
+      {
+        "id": "AXIOM",
+        "workspace": "/data/.openclaw/workspaces/AXIOM"
+      },
+      {
+        "id": "FORGE",
+        "workspace": "/data/.openclaw/workspaces/FORGE"
+      },
+      {
+        "id": "CLAUD",
+        "workspace": "/data/.openclaw/workspaces/CLAUD"
+      },
+      {
+        "id": "GEM",
+        "workspace": "/data/.openclaw/workspaces/GEM"
+      }
+    ]
+  }
+}
