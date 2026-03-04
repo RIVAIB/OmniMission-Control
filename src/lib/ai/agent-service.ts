@@ -5,6 +5,7 @@ import { getDatabase } from '@/lib/db'
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages'
 import { callAgent } from './claude'
 import { retrieve, retrieveShared, memorize } from '@/lib/memory/mem0'
+import { sendToAgent, isOpenClawAvailable } from './openclaw-client'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -149,13 +150,26 @@ export async function processMessageWithAgent(
     { role: 'user', content: userMessage },
   ]
 
-  // 6. Call Claude
-  const response = await callAgent(
-    systemPrompt,
-    claudeMessages,
-    agent.config.model,
-    agent.config.maxTokens ?? 1024
-  )
+  // 6. Call agent — via OpenClaw if available, fallback to direct Claude API
+  let response: string
+  if (isOpenClawAvailable()) {
+    response = await sendToAgent(
+      agent.name,
+      memUserId,
+      claudeMessages.map(m => ({
+        role: m.role as 'user' | 'assistant',
+        content: typeof m.content === 'string' ? m.content : '',
+      })),
+      systemPrompt
+    )
+  } else {
+    response = await callAgent(
+      systemPrompt,
+      claudeMessages,
+      agent.config.model,
+      agent.config.maxTokens ?? 1024
+    )
+  }
 
   // 7. Persist agent response
   db.prepare(
