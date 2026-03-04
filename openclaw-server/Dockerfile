@@ -3,12 +3,14 @@ FROM node:22-slim
 # git es requerido por npm para instalar paquetes con dependencias git
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 
-# Redirigir SSH de GitHub a HTTPS (necesario para deps como libsignal-node de Baileys)
-RUN git config --global url."https://github.com/".insteadOf "ssh://git@github.com/" \
- && git config --global url."https://github.com/".insteadOf "git@github.com:"
+# Redirigir SSH→HTTPS a nivel sistema (/etc/gitconfig) — independiente de $HOME
+# --system aplica a todos los usuarios y procesos, lo usa npm al invocar git internamente
+RUN git config --system url."https://github.com/".insteadOf "ssh://git@github.com/" \
+ && git config --system url."https://github.com/".insteadOf "git@github.com:" \
+ && cat /etc/gitconfig
 
 # Instalar openclaw globalmente
-RUN npm install -g openclaw@latest
+RUN HOME=/root npm install -g openclaw@latest
 
 # Crear directorio de configuración de openclaw
 RUN mkdir -p /data/.openclaw
