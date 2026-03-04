@@ -16,6 +16,8 @@
     "quality:gate": "pnpm test:all"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@google/generative-ai": "^0.24.1",
     "@scalar/api-reference-react": "^0.8.66",
     "@xyflow/react": "^12.10.0",
     "autoprefixer": "^10.4.20",
@@ -25,6 +27,7 @@
     "eslint-config-next": "^16.1.6",
     "next": "^16.1.6",
     "next-themes": "^0.4.6",
+    "openai": "^6.25.0",
     "pino": "^10.3.1",
     "postcss": "^8.5.2",
     "react": "^19.0.1",
