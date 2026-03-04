@@ -69,12 +69,10 @@ export function createConversation(_channel: string, _contactId: string): string
 // ─── Memory gate ──────────────────────────────────────────────────────────────
 
 /**
- * Web chat (no contactId) = always memorize.
- * Telegram contacts = gated until CRM activates is_patient flag (Fase 2).
+ * Memory enabled for all channels (web chat + Telegram).
  */
-function shouldMemorize(contactId: string | undefined): boolean {
-  if (!contactId) return true
-  return false
+function shouldMemorize(_contactId: string | undefined): boolean {
+  return true
 }
 
 // ─── Core processing ──────────────────────────────────────────────────────────
