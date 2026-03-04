@@ -134,7 +134,14 @@ export async function processMessageWithAgent(
     sharedCtx  ? `## Contexto compartido del equipo:\n${sharedCtx}`      : '',
   ].filter(Boolean).join('\n\n')
 
-  const systemPrompt = memBlock ? `${baseSystemPrompt}\n\n${memBlock}` : baseSystemPrompt
+  const knownUser = !!(privateCtx || sharedCtx)
+  const memInstructions = knownUser
+    ? '\n\n## Instrucción de comportamiento:\nYa conoces a este usuario. NO te presentes ni te identifiques de nuevo. Ve directo al punto.'
+    : ''
+
+  const systemPrompt = memBlock
+    ? `${baseSystemPrompt}\n\n${memBlock}${memInstructions}`
+    : baseSystemPrompt
 
   // 5. Build messages array for Claude: history + current message
   const claudeMessages: MessageParam[] = [
