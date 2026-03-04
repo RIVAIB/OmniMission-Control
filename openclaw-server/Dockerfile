@@ -1,5 +1,8 @@
 FROM node:22-slim
 
+# git es requerido por npm para instalar paquetes con dependencias git
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+
 # Instalar openclaw globalmente
 RUN npm install -g openclaw@latest
 
