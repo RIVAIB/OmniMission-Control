@@ -71,8 +71,8 @@ export function AgentSpawnPanel() {
       if (result.success) {
         // Update the spawn request with success
         updateSpawnRequest(spawnId, {
-          status: 'running',
-          result: result.sessionInfo || 'Agent spawned successfully'
+          status: 'completed',
+          result: result.stdout || result.sessionInfo || 'Agent spawned successfully'
         })
 
         // Clear form
@@ -237,6 +237,11 @@ export function AgentSpawnPanel() {
                       <div className="text-sm text-muted-foreground mt-1 truncate">
                         {request.task}
                       </div>
+                      {request.result && (
+                        <div className="text-sm text-green-400 mt-2 whitespace-pre-wrap">
+                          {request.result}
+                        </div>
+                      )}
                       {request.error && (
                         <div className="text-sm text-red-400 mt-2">
                           Error: {request.error}
