@@ -12,7 +12,8 @@
     },
     "controlUi": {
       "enabled": true,
-      "allowedOrigins": ["${MISSION_CONTROL_ORIGIN}"]
+      "allowedOrigins": ["${MISSION_CONTROL_ORIGIN}"],
+      "dangerouslyDisableDeviceAuth": true
     }
   },
   "agents": {
