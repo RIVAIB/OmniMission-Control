@@ -234,7 +234,9 @@ export function useWebSocket() {
         role,
         scopes,
         auth: authToken ? { token: authToken } : undefined,
-        device,
+        // Device identity omitted intentionally: sending it triggers OpenClaw's
+        // device-pairing flow (NOT_PAIRED) on every new browser session.
+        // Token-based auth is sufficient for a shared web dashboard.
         deviceToken: cachedToken || undefined,
       }
     }
