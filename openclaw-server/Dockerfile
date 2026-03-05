@@ -17,14 +17,12 @@ RUN GIT_CONFIG_COUNT=2 \
     GIT_CONFIG_VALUE_1="git@github.com:" \
     HOME=/root npm install -g openclaw@latest
 
-# Crear directorio de configuración de openclaw
-RUN mkdir -p /data/.openclaw
-
 WORKDIR /app
 
-# Copiar configuración y workspaces
-COPY openclaw.json /data/.openclaw/openclaw.json
-COPY workspaces/ /data/.openclaw/workspaces/
+# Copiar config a /app/config — el volume en /data/.openclaw sobreescribiría /data/
+# entrypoint.sh los copia al volume en el primer arranque
+COPY openclaw.json /app/config/openclaw.json
+COPY workspaces/ /app/config/workspaces/
 
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
