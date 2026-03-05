@@ -98,8 +98,10 @@ export default function Home() {
           setGatewayAvailable(true)
         }
         // Connect to gateway WebSocket
+        // gatewayWsUrl from server beats NEXT_PUBLIC (which may not be embedded at build time)
         const wsToken = process.env.NEXT_PUBLIC_GATEWAY_TOKEN || process.env.NEXT_PUBLIC_WS_TOKEN || ''
-        const explicitWsUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || ''
+        const serverWsUrl = (data as any)?.gatewayWsUrl || ''
+        const explicitWsUrl = serverWsUrl || process.env.NEXT_PUBLIC_GATEWAY_URL || ''
         const gatewayPort = process.env.NEXT_PUBLIC_GATEWAY_PORT || '18789'
         const gatewayHost = process.env.NEXT_PUBLIC_GATEWAY_HOST || window.location.hostname
         const gatewayProto =
@@ -109,7 +111,7 @@ export default function Home() {
         connect(wsUrl, wsToken)
       })
       .catch(() => {
-        // If capabilities check fails, still try to connect
+        // If capabilities check fails, still try to connect with NEXT_PUBLIC fallback
         const wsToken = process.env.NEXT_PUBLIC_GATEWAY_TOKEN || process.env.NEXT_PUBLIC_WS_TOKEN || ''
         const explicitWsUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || ''
         const gatewayPort = process.env.NEXT_PUBLIC_GATEWAY_PORT || '18789'

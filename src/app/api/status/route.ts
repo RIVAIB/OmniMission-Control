@@ -509,7 +509,14 @@ async function getCapabilities() {
     // credentials file may not exist or be unreadable
   }
 
-  return { gateway, openclawHome, claudeHome, claudeSessions, subscription }
+  // Derive public WSS URL for the gateway — returned to the browser so it doesn't
+  // need NEXT_PUBLIC_GATEWAY_URL to be embedded at build time.
+  const publicUrl = process.env.OPENCLAW_GATEWAY_PUBLIC_URL || ''
+  const gatewayWsUrl = publicUrl
+    ? publicUrl.replace(/^https?:\/\//, 'wss://')
+    : ''
+
+  return { gateway, openclawHome, claudeHome, claudeSessions, subscription, gatewayWsUrl }
 }
 
 function isPortOpen(host: string, port: number): Promise<boolean> {
