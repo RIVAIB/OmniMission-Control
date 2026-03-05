@@ -1,7 +1,7 @@
 FROM node:22-slim
 
 # git es requerido por npm para instalar paquetes con dependencias git
-RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Redirigir SSH→HTTPS: escribir en /etc/gitconfig Y /root/.gitconfig para máxima cobertura
 RUN printf '[url "https://github.com/"]\n\tinsteadOf = ssh://git@github.com/\n\tinsteadOf = git@github.com:\n' \
