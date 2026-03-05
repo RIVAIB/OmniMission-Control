@@ -12,17 +12,11 @@
     "controlUi": {
       "enabled": true,
       "allowedOrigins": ["${MISSION_CONTROL_ORIGIN}"]
-    },
-    "openaiHttp": {
-      "enabled": true
     }
   },
   "agents": {
     "defaults": {
-      "model": "anthropic/claude-sonnet-4-6",
-      "tools": {
-        "allow": ["*"]
-      }
+      "model": "anthropic/claude-sonnet-4-6"
     },
     "list": [
       {
