@@ -21,20 +21,16 @@ RUN pnpm build
 FROM node:20-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
-# su-exec: drop privileges after fixing volume ownership at startup
-# curl: used by HEALTHCHECK
-RUN apt-get update && apt-get install -y su-exec curl --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl --no-install-recommends && rm -rf /var/lib/apt/lists/*
+# adduser kept for reference but container runs as root so Railway Volumes are writable
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
 # Copy public directory if it exists (may not exist in all setups)
 COPY --from=build /app/public* ./public/
-COPY docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN chmod +x /app/docker-entrypoint.sh
-# Container runs as root so entrypoint can chown the Railway Volume before exec'ing nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl -f http://localhost:3000/login || exit 1
-CMD ["/app/docker-entrypoint.sh"]
+CMD ["node", "server.js"]
