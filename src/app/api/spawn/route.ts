@@ -7,8 +7,7 @@ import { heavyLimiter } from '@/lib/rate-limit'
 import { logger } from '@/lib/logger'
 import { validateBody, spawnAgentSchema } from '@/lib/validation'
 
-const OPENCLAW_BASE = process.env.OPENCLAW_GATEWAY_URL ?? ''
-const OPENCLAW_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN ?? ''
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY ?? ''
 
 export async function POST(request: NextRequest) {
   const auth = requireRole(request, 'operator')
@@ -24,51 +23,49 @@ export async function POST(request: NextRequest) {
 
     const spawnId = `spawn-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-    if (!OPENCLAW_BASE || !OPENCLAW_TOKEN) {
+    if (!ANTHROPIC_API_KEY) {
       return NextResponse.json({
         success: false,
         spawnId,
-        error: 'OpenClaw gateway not configured (OPENCLAW_GATEWAY_URL / OPENCLAW_GATEWAY_TOKEN missing)',
+        error: 'ANTHROPIC_API_KEY not configured',
         task, model, label, timeoutSeconds, createdAt: Date.now(),
       }, { status: 503 })
     }
 
     try {
-      // Resolve model: if short alias (e.g. "sonnet"), use the full model name
-      const resolvedModel = model?.includes('/')
+      // Resolve to a valid Anthropic model ID
+      const resolvedModel = (model && model.startsWith('claude-') && !model.includes('/'))
         ? model
-        : `anthropic/claude-sonnet-4-6`
+        : 'claude-sonnet-4-6'
 
-      // Use OpenClaw's OpenAI-compatible HTTP API instead of local clawdbot CLI
-      const res = await fetch(`${OPENCLAW_BASE}/v1/chat/completions`, {
+      // Call Anthropic Messages API directly — OpenClaw is a WebSocket gateway
+      // and does not expose an HTTP completions endpoint.
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENCLAW_TOKEN}`,
-          // Default to JESSY — the primary agent defined in openclaw.json
-          'x-openclaw-agent-id': 'JESSY',
+          'x-api-key': ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
           model: resolvedModel,
+          max_tokens: 4096,
           messages: [{ role: 'user', content: task }],
-          // Stable session key so spawns are tracked per label
-          user: `mc-spawn-${label || spawnId}`,
-          stream: false,
         }),
         signal: AbortSignal.timeout((timeoutSeconds ?? 300) * 1000),
       })
 
       if (!res.ok) {
         const errText = await res.text()
-        throw new Error(`OpenClaw HTTP ${res.status}: ${errText}`)
+        throw new Error(`Anthropic API ${res.status}: ${errText}`)
       }
 
       const data = await res.json() as {
-        choices?: Array<{ message?: { content?: string } }>
+        content?: Array<{ type: string; text?: string }>
         id?: string
       }
 
-      const reply = data.choices?.[0]?.message?.content ?? ''
+      const reply = data.content?.find(b => b.type === 'text')?.text ?? ''
 
       return NextResponse.json({
         success: true,
