@@ -27,6 +27,9 @@ COPY workspaces/ /app/config/workspaces/
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
+# HOME=/data hace que openclaw busque su config en $HOME/.openclaw = /data/.openclaw
+# que coincide exactamente con el mount path del Railway Volume
+ENV HOME=/data
 ENV OPENCLAW_HOME=/data/.openclaw
 ENV NODE_ENV=production
 
