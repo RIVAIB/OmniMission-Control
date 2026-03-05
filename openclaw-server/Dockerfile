@@ -19,18 +19,15 @@ RUN GIT_CONFIG_COUNT=2 \
 
 WORKDIR /app
 
-# Copiar config a /app/config — el volume en /data/.openclaw sobreescribiría /data/
-# entrypoint.sh los copia al volume en el primer arranque
+# Config template: entrypoint.sh la copia a /root/.openclaw/ con vars de entorno
+# sustituidas en cada arranque — sin dependencia del Railway Volume.
 COPY openclaw.json /app/config/openclaw.json
 COPY workspaces/ /app/config/workspaces/
 
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# HOME=/data hace que openclaw busque su config en $HOME/.openclaw = /data/.openclaw
-# que coincide exactamente con el mount path del Railway Volume
-ENV HOME=/data
-ENV OPENCLAW_HOME=/data/.openclaw
+# HOME=/root (default) — openclaw lee config desde /root/.openclaw/openclaw.json
 ENV NODE_ENV=production
 
 EXPOSE 18789

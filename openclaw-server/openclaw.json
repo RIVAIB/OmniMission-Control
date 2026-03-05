@@ -28,35 +28,35 @@
       {
         "id": "JESSY",
         "default": true,
-        "workspace": "/data/.openclaw/workspaces/JESSY"
+        "workspace": "/root/.openclaw/workspaces/JESSY"
       },
       {
         "id": "CLAWDIO",
-        "workspace": "/data/.openclaw/workspaces/CLAWDIO"
+        "workspace": "/root/.openclaw/workspaces/CLAWDIO"
       },
       {
         "id": "NEXUS",
-        "workspace": "/data/.openclaw/workspaces/NEXUS"
+        "workspace": "/root/.openclaw/workspaces/NEXUS"
       },
       {
         "id": "APEX",
-        "workspace": "/data/.openclaw/workspaces/APEX"
+        "workspace": "/root/.openclaw/workspaces/APEX"
       },
       {
         "id": "AXIOM",
-        "workspace": "/data/.openclaw/workspaces/AXIOM"
+        "workspace": "/root/.openclaw/workspaces/AXIOM"
       },
       {
         "id": "FORGE",
-        "workspace": "/data/.openclaw/workspaces/FORGE"
+        "workspace": "/root/.openclaw/workspaces/FORGE"
       },
       {
         "id": "CLAUD",
-        "workspace": "/data/.openclaw/workspaces/CLAUD"
+        "workspace": "/root/.openclaw/workspaces/CLAUD"
       },
       {
         "id": "GEM",
-        "workspace": "/data/.openclaw/workspaces/GEM"
+        "workspace": "/root/.openclaw/workspaces/GEM"
       }
     ]
   }
