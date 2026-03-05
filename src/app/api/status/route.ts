@@ -11,12 +11,19 @@ import { MODEL_CATALOG } from '@/lib/models'
 import { logger } from '@/lib/logger'
 
 export async function GET(request: NextRequest) {
-  const auth = requireRole(request, 'viewer')
-  if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status })
-
   try {
     const { searchParams } = new URL(request.url)
     const action = searchParams.get('action') || 'overview'
+
+    // capabilities is public — only exposes feature flags and the public gateway WSS URL.
+    // No auth required so the browser can get the correct WS URL before the user logs in.
+    if (action === 'capabilities') {
+      const capabilities = await getCapabilities()
+      return NextResponse.json(capabilities)
+    }
+
+    const auth = requireRole(request, 'viewer')
+    if ('error' in auth) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
     if (action === 'overview') {
       const status = await getSystemStatus(auth.user.workspace_id ?? 1)
@@ -41,11 +48,6 @@ export async function GET(request: NextRequest) {
     if (action === 'health') {
       const health = await performHealthCheck()
       return NextResponse.json(health)
-    }
-
-    if (action === 'capabilities') {
-      const capabilities = await getCapabilities()
-      return NextResponse.json(capabilities)
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
