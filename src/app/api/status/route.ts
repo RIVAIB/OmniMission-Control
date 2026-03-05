@@ -512,11 +512,15 @@ async function getCapabilities() {
   }
 
   // Derive public WSS URL for the gateway — returned to the browser so it doesn't
-  // need NEXT_PUBLIC_GATEWAY_URL to be embedded at build time.
+  // need NEXT_PUBLIC_* vars to be embedded at build time.
+  // Token is appended as ?token=... so the browser can authenticate the WS handshake.
+  // websocket.ts already extracts tokens from the URL query string (line ~496).
   const publicUrl = process.env.OPENCLAW_GATEWAY_PUBLIC_URL || ''
-  const gatewayWsUrl = publicUrl
-    ? publicUrl.replace(/^https?:\/\//, 'wss://')
-    : ''
+  const gatewayToken = process.env.OPENCLAW_GATEWAY_TOKEN || ''
+  const baseWsUrl = publicUrl ? publicUrl.replace(/^https?:\/\//, 'wss://') : ''
+  const gatewayWsUrl = baseWsUrl && gatewayToken
+    ? `${baseWsUrl}?token=${encodeURIComponent(gatewayToken)}`
+    : baseWsUrl
 
   return { gateway, openclawHome, claudeHome, claudeSessions, subscription, gatewayWsUrl }
 }
