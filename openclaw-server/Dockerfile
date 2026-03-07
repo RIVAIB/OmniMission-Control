@@ -25,7 +25,7 @@ COPY openclaw.json /app/config/openclaw.json
 COPY workspaces/ /app/config/workspaces/
 
 COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 # HOME=/root (default) — openclaw lee config desde /root/.openclaw/openclaw.json
 ENV NODE_ENV=production

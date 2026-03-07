@@ -29,7 +29,7 @@ services:
   mem0:
     build: ./mem0-server
     ports:
-      - "8000:8000"
+      - "8001:8000"
     env_file: .env
     environment:
       QDRANT_HOST: qdrant
@@ -43,7 +43,7 @@ services:
   qdrant:
     image: qdrant/qdrant:latest
     ports:
-      - "6333:6333"
+      - "6334:6333"
     volumes:
       - qdrant-data:/qdrant/storage
     restart: unless-stopped

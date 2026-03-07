@@ -33,7 +33,7 @@ DEFAULT_CONFIG = {
         },
     },
     "llm": {
-        "provider": "google",
+        "provider": "gemini",
         "config": {
             "api_key": GOOGLE_AI_API_KEY,
             "temperature": 0.2,
@@ -41,7 +41,7 @@ DEFAULT_CONFIG = {
         },
     },
     "embedder": {
-        "provider": "google",
+        "provider": "gemini",
         "config": {
             "api_key": GOOGLE_AI_API_KEY,
             "model": "models/text-embedding-004",
