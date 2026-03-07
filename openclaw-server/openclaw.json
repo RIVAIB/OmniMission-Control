@@ -7,7 +7,7 @@
     "port": 18789,
     "bind": "lan",
     "auth": {
-      "mode": "token",
+      "mode": "trusted-proxy",
       "token": "${OPENCLAW_GATEWAY_TOKEN}"
     },
     "controlUi": {

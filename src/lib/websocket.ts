@@ -234,7 +234,6 @@ export function useWebSocket() {
         role,
         scopes,
         auth: authToken ? { token: authToken } : undefined,
-        device,
         deviceToken: cachedToken || undefined,
       }
     }
