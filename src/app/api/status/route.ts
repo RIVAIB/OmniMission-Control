@@ -517,7 +517,9 @@ async function getCapabilities() {
   // websocket.ts already extracts tokens from the URL query string (line ~496).
   const publicUrl = process.env.OPENCLAW_GATEWAY_PUBLIC_URL || ''
   const gatewayToken = process.env.OPENCLAW_GATEWAY_TOKEN || ''
-  const baseWsUrl = publicUrl ? publicUrl.replace(/^https?:\/\//, 'wss://') : ''
+  const baseWsUrl = publicUrl
+    ? publicUrl.replace(/^https:\/\//, 'wss://').replace(/^http:\/\//, 'ws://')
+    : ''
   const gatewayWsUrl = baseWsUrl && gatewayToken
     ? `${baseWsUrl}?token=${encodeURIComponent(gatewayToken)}`
     : baseWsUrl
