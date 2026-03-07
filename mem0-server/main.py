@@ -19,7 +19,7 @@ QDRANT_HOST = os.environ.get("QDRANT_HOST", "localhost")
 QDRANT_PORT = os.environ.get("QDRANT_PORT", "6333")
 QDRANT_COLLECTION_NAME = os.environ.get("QDRANT_COLLECTION_NAME", "memories")
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+GOOGLE_AI_API_KEY = os.environ.get("GOOGLE_AI_API_KEY")
 HISTORY_DB_PATH = os.environ.get("HISTORY_DB_PATH", "/app/history/history.db")
 
 DEFAULT_CONFIG = {
@@ -33,18 +33,18 @@ DEFAULT_CONFIG = {
         },
     },
     "llm": {
-        "provider": "openai",
+        "provider": "google",
         "config": {
-            "api_key": OPENAI_API_KEY,
+            "api_key": GOOGLE_AI_API_KEY,
             "temperature": 0.2,
-            "model": "gpt-4.1-nano-2025-04-14",
+            "model": "gemini-2.5-flash",
         },
     },
     "embedder": {
-        "provider": "openai",
+        "provider": "google",
         "config": {
-            "api_key": OPENAI_API_KEY,
-            "model": "text-embedding-3-small",
+            "api_key": GOOGLE_AI_API_KEY,
+            "model": "models/text-embedding-004",
         },
     },
     "history_db_path": HISTORY_DB_PATH,

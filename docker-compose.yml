@@ -1,12 +1,54 @@
 services:
   mission-control:
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_GATEWAY_URL: ws://192.168.68.108:18789
     ports:
       - "3000:3000"
     env_file: .env
+    environment:
+      OPENCLAW_GATEWAY_URL: http://openclaw:18789
+      OPENCLAW_GATEWAY_HOST: openclaw
+      OPENCLAW_GATEWAY_PUBLIC_URL: http://192.168.68.108:18789
+      MEM0_BASE_URL: http://mem0:8000
     volumes:
-      - mc-data:/app/.data
+      - mc-data:/app/data
+    depends_on:
+      - openclaw
+      - mem0
+    restart: unless-stopped
+
+  openclaw:
+    build: ./openclaw-server
+    ports:
+      - "18789:18789"
+    env_file: .env
+    restart: unless-stopped
+
+  mem0:
+    build: ./mem0-server
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: "6333"
+    volumes:
+      - mem0-data:/app/history
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant-data:/qdrant/storage
     restart: unless-stopped
 
 volumes:
   mc-data:
+  mem0-data:
+  qdrant-data:

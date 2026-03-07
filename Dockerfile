@@ -15,6 +15,8 @@ RUN if [ -f pnpm-lock.yaml ]; then \
     fi
 
 FROM base AS build
+ARG NEXT_PUBLIC_GATEWAY_URL
+ENV NEXT_PUBLIC_GATEWAY_URL=$NEXT_PUBLIC_GATEWAY_URL
 COPY --from=deps /app ./
 RUN pnpm build
 
