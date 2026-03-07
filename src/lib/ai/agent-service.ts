@@ -3,7 +3,7 @@
 import { randomUUID } from 'crypto'
 import { getDatabase } from '@/lib/db'
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages'
-import { callAgent } from './claude'
+import { callAgent } from './gemini'
 import { retrieve, retrieveShared, memorize } from '@/lib/memory/mem0'
 import { sendToAgent, isOpenClawAvailable } from './openclaw-client'
 

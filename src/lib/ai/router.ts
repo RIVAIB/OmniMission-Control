@@ -2,7 +2,7 @@
 // CLAWDIO routing orchestrator — decides which agent handles a message.
 // Adapted for OmniMission-Control: uses new callAgent(system, messages, model, maxTokens) signature.
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages'
-import { callAgent } from './claude'
+import { callAgent } from './gemini'
 import { CLAUDE_MODEL } from './models'
 
 // ─── CLAWDIO Routing Prompt ───────────────────────────────────────────────────
